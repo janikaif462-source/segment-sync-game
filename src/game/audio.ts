@@ -39,8 +39,9 @@ export function startMusic() {
   if (musicTimer) return;
   let i = 0;
   musicTimer = setInterval(() => {
-    tone(melody[i % melody.length], 0.45, "sine", 0.04);
-    if (i % 4 === 0) tone(melody[i % melody.length] / 2, 0.9, "triangle", 0.03);
+    const f = melody[i % melody.length] ?? 440;
+    tone(f, 0.45, "sine", 0.04);
+    if (i % 4 === 0) tone(f / 2, 0.9, "triangle", 0.03);
     i++;
   }, 420);
 }
