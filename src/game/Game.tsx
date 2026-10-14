@@ -30,7 +30,9 @@ export function Game() {
         window.removeEventListener("pointerdown", start);
         stopMusic();
       };
-    } else stopMusic();
+    }
+    stopMusic();
+    return undefined;
   }, [save.music, ready]);
 
   const play = useCallback((s: () => void) => {
@@ -112,7 +114,7 @@ const GROUPS: { d: Difficulty; from: number; to: number; cls: string }[] = [
 function LevelSelect({ save, onBack, onPick }: { save: SaveData; onBack: () => void; onPick: (l: number) => void }) {
   const initial = Math.max(0, GROUPS.findIndex((g) => save.unlocked >= g.from && save.unlocked <= g.to));
   const [tab, setTab] = useState(initial);
-  const g = GROUPS[tab];
+  const g = GROUPS[tab] ?? GROUPS[0]!;
   const totalStars = Object.values(save.stars).reduce((a, b) => a + b, 0);
   return (
     <main className="mx-auto flex min-h-dvh max-w-4xl flex-col gap-5 px-4 py-6">
@@ -203,7 +205,7 @@ function shuffled<T>(a: T[]): T[] {
   const r = [...a];
   for (let i = r.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [r[i], r[j]] = [r[j], r[i]];
+    const tmp = r[i]!; r[i] = r[j]!; r[j] = tmp;
   }
   return r;
 }
@@ -342,7 +344,7 @@ function PlayScreen({ level, save, sound, onToggleSound, onHome, onComplete, onN
     if (tray.length === 0) return;
     sound(sfx.click);
     setHints((h) => h + 1);
-    const id = tray[Math.floor(Math.random() * tray.length)];
+    const id = tray[Math.floor(Math.random() * tray.length)]!;
     setHintId(id);
     setTray((t) => [id, ...t.filter((p) => p !== id)]);
     setPage(0);
